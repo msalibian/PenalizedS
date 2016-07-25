@@ -88,6 +88,6 @@ tmp.s <- pen.s.rgcv(y=y, X=X, D=D, lambdas=lambdas, num.knots=num.knots, p=p, NN
 lines(x, tmp.s$yhat, lwd=3, col='blue')
 
 legend(-.75, 15, legend=c("LS", "M", "S", "True"), 
-col=c('red', 'green', 'blue', 'black'), lwd=3)
+       col=c('red', 'green', 'blue', 'black'), lwd=3)
 
 
