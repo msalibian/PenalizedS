@@ -8,7 +8,7 @@ S-estimators for penalized regression splines
 
 This repository contains code implementing the penalised S-regression estimators as proposed in "S-estimation for penalised regression splines" [Tharmaratnam et al (2010)](http://dx.doi.org/10.1198/jcgs.2010.08149).
 
-All the necessary functions are in the file `pen-s-functions.R`. The following example illustrates how the code is used.
+All the necessary functions are in the file `pen-s-functions.R`. The following example illustrates how the code is used with a synthetic example. I will soon also include the example we have in the paper.
 
 ``` r
 source("pen-s-functions.R")
