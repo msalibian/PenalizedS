@@ -63,7 +63,8 @@ lambdas <- seq(.1, 2, length=100)
 # build the design matrix
 p <- 3
 num.knots <- max(5,min(floor(length(unique(x))/4),35))
-knots <- quantile(unique(x), seq(0,1,length=num.knots+2))[-c(1,(num.knots+2))]
+knots <- quantile(unique(x), 
+            seq(0,1,length=num.knots+2))[-c(1,(num.knots+2))]
 xpoly <-rep(1,n)
 for (j in 1:p) xpoly<-cbind(xpoly,x^j)
 xspline <- outer(x,knots,"-")
