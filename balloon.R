@@ -12,17 +12,17 @@ plot(y~x, main='Balloon data', pch=19, col='gray', cex=.7)
 
 
 # ####### subsample of data ############
-# x1 <- seq(1,4984,5)
-# y1 <- y[x1] 
-# n1 <- length(x1)
-# x1 <- (1:n1)/n1 
-# plot(y1~x1, main='Balloon data - subset 1', pch=19, col='gray', cex=.7)
-# ##############
+x1 <- seq(1,4984,5)
+y1 <- y[x1] 
+n1 <- length(x1)
+x1 <- (1:n1)/n1 
+plot(y1~x1, main='Balloon data - subset 1', pch=19, col='gray', cex=.7)
+##############
 
 
-# x <- x1
-# y <- y1
-# n <- n1
+x <- x1
+y <- y1
+n <- n1
 p <- 3
 num.knots <- max(5, min(floor(length(unique(x))/4),35))
 knots <- quantile(unique(x),seq(0,1,length=num.knots+2))[-c(1,(num.knots+2))]
@@ -42,7 +42,7 @@ D <- diag(c(rep(0,ncol(xpoly)),rep(1,ncol(xspline))))
 # mse.m <- mse.ls <- mse.s <- rep(0,N)
 
 # grid of lambdas to consider
-lambdas <- seq(.01, 1, length=100)
+lambdas <- seq(.001, 1, length=100)
 ll <- length(lambdas)
 
 # tuning constants for the S-estimator
@@ -69,6 +69,10 @@ plot(y ~ x, main='Balloon data - subset 1', pch=19, col='gray', cex=.7, ylim=c(0
 lines(x, tmp.ls$yhat, lwd=2)
 lines(x, tmp.s$yhat, col="blue", lwd=2)
 lines(x, tmp.m$yhat, col="red", lwd=2)
+
+plot(y ~ x, main='Balloon data - subset 1', pch=19, col='gray', cex=.7, ylim=c(0,2.5))
+yhat.0 <- X %*% solve( t(X) %*% X + 1e-11 * D, t(X) %*% y)
+lines(x, yhat.0, lwd=2, col='red')
 
 
 
