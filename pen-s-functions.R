@@ -189,7 +189,7 @@ gcv <- function(y, X, D, lambda)
   # X is the big design matrix
   # D is the penalty matrix
   # lambda is the value of the penalty constant to be evaluated
-  tmp <- solve( t(X) %*% X + lambda * D ) %*% t(X) 
+  tmp <- solve( t(X) %*% X + lambda * D, t(X)) 
   beta <- as.vector( tmp %*% y )
   n <- length(y)
   r <- as.vector(y - X %*% beta)
@@ -209,10 +209,10 @@ pen.ls.gcv <- function(y, X, D, lambdas)
   }
   # find the best lambda
   lam <- max( lambdas[ gcvs == min(gcvs) ] )
-  beta.ls <- as.vector(solve( t(X) %*% X + lam * D ) %*% t(X) %*% y )
-  Sbeta.ls <- mad( y - X %*% beta.ls)
+  beta.ls <- as.vector(solve( t(X) %*% X + lam * D, t(X) %*% y ))
   # get the LS estimated mean
-  yhat.ls <- as.vector( X %*% solve( t(X) %*% X + lam * D ) %*% t(X) %*% y )
+  yhat.ls <- as.vector( X %*% beta.ls )
+  Sbeta.ls <- mad( y - yhat.ls)
   return(list(beta=beta.ls, Sbeta=Sbeta.ls, yhat = yhat.ls, lam=lam, gcv=min(gcvs)))
 }
 
@@ -249,7 +249,8 @@ pen.m<- function(y, X, N, D, lambda, num.knots, p, epsilon=1e-6)
     ifelse(((norm(mbetaresults[j,]-mbetaresults[j-1,])/norm(mbetaresults[j-
                                                                            1,]))<epsilon),break,next)
   }
-  return(list(outmbeta=as.vector(mbetaresults[j,]),sigma=as.vector(results[j,n+1]), iterations=j))
+  return(list(outmbeta=as.vector(mbetaresults[j,]),
+              sigma=as.vector(results[j,n+1]), iterations=j))
 }
 
 
@@ -270,7 +271,7 @@ mrcv <- function(mm, y, X, D, lambda,n)
   psi1dash <- ifelse( abs(res)<=cval, 2,0 )
   Epsi1dash <- sum(psi1dash)/n
   II<- diag(c(rep(1,ncol(X)))) 
-  SS <-X %*% solve(II+ lambda * (sigma/Epsi1dash)* D)%*%t(X)
+  SS <-X %*% solve(II+ lambda * (sigma/Epsi1dash)* D, t(X))
   return( mrcv=1/n * (sigma^2/Epsi1dash^2)* sum(psi1^2/ (1- diag(SS))^2 )) 
 }
 
@@ -293,8 +294,9 @@ pen.m.rcv <- function(y, X, NN, D, lambdas, num.knots, p, epsilon=1e-6)
   }
   # find the best lambda
   #rlam <- best.gcv 
-  rlam<- lambdas[mrcvs==best.cv]
+  rlam <- max( lambdas[mrcvs==best.cv] )
   yhat.m <- as.vector( X %*% best.mm$outmbeta ) 
-  return(list(yhat = yhat.m, lam=rlam, gcv=min(mrcvs),sigma.m=best.mm$sigma, iterations=best.mm$iterations))
+  return(list(yhat = yhat.m, lam=rlam, gcv=min(mrcvs),
+              sigma.m=best.mm$sigma, iterations=best.mm$iterations))
 }
 
