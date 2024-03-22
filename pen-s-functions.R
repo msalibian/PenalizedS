@@ -80,7 +80,7 @@ initial.S<- function(y, X, D,lambda, num.knots, p, NN, cc, b, NNN)
     Xs <- X[indices,]
     ys <- y[indices] 
     init <- pen.ls(ys, Xs, D, lambda)
-    uu1 <- pen.s(y,X,20,D,lambda,num.knots,p,init$beta,init$Sbeta,cc=cc,b=b)
+    uu1 <- pen.s(y,X,NN,D,lambda,num.knots,p,init$beta,init$Sbeta,cc=cc,b=b)
     uubeta[,ii]<- as.vector(uu1$estimates)
     uuscale[ii] <- uu1$scale
     uuweights[,ii] <- as.vector(uu1$weights)
@@ -90,7 +90,7 @@ initial.S<- function(y, X, D,lambda, num.knots, p, NN, cc, b, NNN)
   }
   # Initial candidates from M-estimator
   initM <- pen.m(y, X, N=NN, D, lambda, num.knots, p) 
-  uuM <-pen.s(y,X,20,D,lambda,num.knots,p,initM$outmbeta,initM$sigma,cc=cc,b=b)
+  uuM <-pen.s(y,X,NN,D,lambda,num.knots,p,initM$outmbeta,initM$sigma,cc=cc,b=b)
   uubeta[,(NNN+1)]<- as.vector(uuM$estimates)
   uuscale[(NNN+1)] <- uuM$scale
   uuweights[,(NNN+1)] <- as.vector(uuM$weights)
@@ -99,7 +99,7 @@ initial.S<- function(y, X, D,lambda, num.knots, p, NN, cc, b, NNN)
                                                             %*% D %*% uuM$estimates)))
   # Initial candidates from LS-estimator
   initLS <- pen.ls(y, X, D, lambda)
-  uuLS <-pen.s(y,X,20,D,lambda,num.knots,p,initLS$beta,initLS$Sbeta,cc=cc,b=b)
+  uuLS <-pen.s(y,X,NN,D,lambda,num.knots,p,initLS$beta,initLS$Sbeta,cc=cc,b=b)
   uubeta[,(NNN+2)]<- as.vector(uuLS$estimates)
   uuscale[(NNN+2)] <- uuLS$scale
   uuweights[,(NNN+2)] <- as.vector(uuLS$weights)
